@@ -51,7 +51,7 @@ define nexus-deploy::artifact(
 		$includeClass = "-c ${classifier}"	
 	}
 
-	$cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} ${$includeClass} -n ${nexus-deploy::NEXUS_URL} -r ${repository} -o ${output} $args -v"
+	$cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} $includeClass -n ${nexus-deploy::NEXUS_URL} -r ${repository} -o ${output} $args -v"
 	
 	if $ensure == present {
 		exec { "Download ${gav}-${classifier}":
