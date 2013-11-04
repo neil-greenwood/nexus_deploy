@@ -19,25 +19,25 @@ Usage
 -----
 	
 	# Initialize Nexus
-	class {'nexus':
+	class {'nexus_deploy':
 		url => "http://edge.spree.de/nexus",
 		username => "nexus",
 		password => "********"
 	}
 	
-	nexus::artifact {'commons-io':
+	nexus_deploy::artifact {'commons-io':
 		gav => "commons-io:commons-io:2.1",
 		repository => "public",
 		output => "/tmp/commons-io-2.1.jar"
 	}
 	
-	nexus::artifact {'ipojo':
+	nexus_deploy::artifact {'ipojo':
 		gav => "org.apache.felix:org.apache.felix.ipojo:1.8.0",
 		repository => "public",
 		output => "/tmp/ipojo-1.8.jar"
 	}
 	
-	nexus::artifact {'chameleon web distribution':
+	nexus_deploy::artifact {'chameleon web distribution':
 		gav => "org.ow2.chameleon:distribution-web:0.3.0-SNAPSHOT",
 		classifier => 'distribution',
 		packaging => 'zip',
