@@ -1,4 +1,4 @@
-# Resource: nexus-deploy::artifact
+# Resource: nexus_deploy::artifact
 #
 # This resource downloads Maven Artifacts from Nexus
 #
@@ -20,13 +20,13 @@
 # If ensure is not set or set to 'update', the artifact is re-downloaded.
 #
 # Sample Usage:
-#  class nexus-deploy {
+#  class nexus_deploy {
 #   url => http://edge.spree.de/nexus,
 #   username => user,
 #   password => password
 # }
 #
-define nexus-deploy::artifact(
+define nexus_deploy::artifact(
 	$gav,
 	$packaging = "jar",
 	$classifier = "",
@@ -39,10 +39,10 @@ define nexus-deploy::artifact(
   $mode = undef
 	) {
 	
-	include nexus-deploy
+	include nexus_deploy
 	
-	if ($nexus-deploy::authentication) {
-		$args = "-u ${nexus-deploy::user} -p '${nexus-deploy::pwd}'"
+	if ($nexus_deploy::authentication) {
+		$args = "-u ${nexus_deploy::user} -p '${nexus_deploy::pwd}'"
 	} else {
 		$args = ""
 	}
@@ -51,7 +51,7 @@ define nexus-deploy::artifact(
 		$includeClass = "-c ${classifier}"	
 	}
 
-	$cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} $includeClass -n ${nexus-deploy::NEXUS_URL} -r ${repository} -o ${output} $args -v"
+	$cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} $includeClass -n ${nexus_deploy::NEXUS_URL} -r ${repository} -o ${output} $args -v"
 	
 	if $ensure == present {
 		exec { "Download ${gav}-${classifier}":

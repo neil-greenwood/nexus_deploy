@@ -1,4 +1,4 @@
-# Class: nexus-deploy
+# Class: nexus_deploy
 #
 # This module downloads Maven Artifacts from Nexus to support deployment
 #
@@ -11,13 +11,13 @@
 # Checks and intialized the Nexus support.
 #
 # Sample Usage:
-#  class nexus-deploy {
+#  class nexus_deploy {
 #   url => http://edge.spree.de/nexus,
 #   username => user,
 #   password => password
 # }
 #
-class nexus-deploy(
+class nexus_deploy(
 	$url = "",
 	$username = "",
 	$password = "") {
@@ -46,7 +46,7 @@ file { "/opt/nexus-script/download-artifact-from-nexus.sh":
 		ensure   => file,
 	    owner    => "root",
 	    mode     => "0755",
-		source   => "puppet:///modules/nexus-deploy/download-artifact-from-nexus.sh",
+		source   => "puppet:///modules/nexus_deploy/download-artifact-from-nexus.sh",
 		require  => [File["/opt/nexus-script"]]
 }
 
