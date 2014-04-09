@@ -134,10 +134,15 @@ fi
 
 # Output
 OUT=
+MOVE_COMMAND=
 if [[ "$OUTPUT" != "" ]] 
 then
-	OUT="-o $OUTPUT"
+  TMP_OUT=$(mktemp)
+	OUT="-o $TMP_OUT"
+  MOVE_COMMAND=" && mv $TMP_OUT $OUTPUT"
 fi
 
 echo "Fetching Artifact from $REDIRECT_URL..." >&2
-curl -sS -L ${REDIRECT_URL} ${OUT} ${AUTHENTICATION} -v  --location-trusted --fail
+DL_COMMAND="curl -sS -L ${REDIRECT_URL} ${OUT} ${AUTHENTICATION} -v  --location-trusted --fail $MOVE_COMMAND"
+
+exec $DL_COMMAND
