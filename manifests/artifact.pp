@@ -36,7 +36,7 @@ define nexus_deploy::artifact(
 	$timeout = undef,
   $owner = undef,
   $group = undef,
-  $mode = undef
+  $mode = "644"
 	) {
 	
 	include nexus_deploy
