@@ -20,20 +20,14 @@
 class nexus_deploy (
     $url,
 
-    $username = '',
-    $password = ''
+    $username = undef,
+    $password = undef,
 ) {
 
-    if ($username != '') and ($password == '') {
-        fail('Cannot initialize the Nexus class - both username and password must be set')
-    } elsif ($username == '') and ($password != '') {
-        fail('Cannot initialize the Nexus class - both username and password must be set')
-    } elsif ($username == '') and ($password == '') {
-        $authentication = false
-    } else {
+    if $username and $password {
         $authentication = true
-        $user = $username
-        $pwd = $password
+    } else {
+        $authentication = false
     }
 
 # Install script

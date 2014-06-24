@@ -42,7 +42,7 @@ define nexus_deploy::artifact(
     include nexus_deploy
 
     if $nexus_deploy::authentication {
-        $args = "-u ${nexus_deploy::user} -p '${nexus_deploy::pwd}'"
+        $args = "-u ${nexus_deploy::username} -p '${nexus_deploy::password}'"
     } else {
         $args = ''
     }
