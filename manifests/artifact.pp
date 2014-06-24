@@ -26,17 +26,18 @@
 #   password => password
 # }
 #
-define nexus_deploy::artifact(
+define nexus_deploy::artifact (
     $gav,
     $repository,
     $output,
-    $packaging   = 'jar',
-    $classifier  = '',
-    $ensure      = 'update',
-    $timeout     = undef,
-    $owner       = undef,
-    $group       = undef,
-    $mode        = '0644'
+
+    $packaging  = 'jar',
+    $classifier = '',
+    $ensure     = 'update',
+    $timeout    = undef,
+    $owner      = undef,
+    $group      = undef,
+    $mode       = '0644',
 ) {
 
     include nexus_deploy
