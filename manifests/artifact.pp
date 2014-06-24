@@ -28,57 +28,61 @@
 #
 define nexus_deploy::artifact(
     $gav,
-    $packaging = "jar",
-    $classifier = "",
     $repository,
     $output,
-    $ensure = update,
-    $timeout = undef,
-  $owner = undef,
-  $group = undef,
-  $mode = "644"
-    ) {
+    $packaging   = 'jar',
+    $classifier  = '',
+    $ensure      = 'update',
+    $timeout     = undef,
+    $owner       = undef,
+    $group       = undef,
+    $mode        = '0644'
+) {
 
     include nexus_deploy
 
     if ($nexus_deploy::authentication) {
         $args = "-u ${nexus_deploy::user} -p '${nexus_deploy::pwd}'"
     } else {
-        $args = ""
+        $args = ''
     }
 
-    if ($classifier) {
+    if $classifier {
         $includeClass = "-c ${classifier}"
     }
 
-    $cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} $includeClass -n ${nexus_deploy::url} -r ${repository} -o ${output} $args -v"
+    $cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} ${includeClass} -n ${nexus_deploy::url} -r ${repository} -o ${output} ${args} -v"
 
-    if $ensure == present {
-        exec { "Download ${gav}-${classifier}":
+    if $ensure == 'present' {
+        exec {
+          "Download ${gav}-${classifier}":
             command => $cmd,
-            creates  => "${output}",
-            timeout => $timeout
+            creates => $output,
+            timeout => $timeout,
         }
-    } elsif $ensure == absent {
-        file { "Remove ${gav}-${classifier}":
+    } elsif $ensure == 'absent' {
+        file {
+          "Remove ${gav}-${classifier}":
+            ensure => absent,
             path   => $output,
-            ensure => absent
         }
     } else {
-        exec { "Download ${gav}-${classifier}":
+        exec {
+          "Download ${gav}-${classifier}":
             command => $cmd,
-            timeout => $timeout
+            timeout => $timeout,
         }
     }
 
     if $ensure != absent {
-      file { "${output}":
-        ensure => file,
-        require => Exec["Download ${gav}-${classifier}"],
-        owner => $owner,
-        group => $group,
-        mode => $mode
-      }
+        file {
+          $output:
+            ensure  => file,
+            require => Exec["Download ${gav}-${classifier}"],
+            owner   => $owner,
+            group   => $group,
+            mode    => $mode,
+        }
     }
 
 }
