@@ -67,7 +67,7 @@ and with yaml file:
     nexus_deploy::password: '********',
 
     nexus_deploy:
-      'apache-tomcat':
+      'org.ow2.chameleon:distribution-web':
         ensure:     'present'
         gav:        'org.ow2.chameleon:distribution-web:0.3.0-SNAPSHOT'
         classifier: 'distribution'
