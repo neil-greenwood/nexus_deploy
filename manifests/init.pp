@@ -18,38 +18,38 @@
 # }
 #
 class nexus_deploy(
-	$url = "",
-	$username = "",
-	$password = "") {
+    $url = "",
+    $username = "",
+    $password = "") {
 
 # Check arguments
 # url mandatory
 if $url == "" {
-	fail("Cannot initialize the Nexus class - the url parameter is mandatory")
+    fail("Cannot initialize the Nexus class - the url parameter is mandatory")
 }
 
 if ($username != "")  and ($password == "") {
-	fail("Cannot initialize the Nexus class - both username and password must be set")
+    fail("Cannot initialize the Nexus class - both username and password must be set")
 } elsif ($username == "")  and ($password != "") {
-	fail("Cannot initialize the Nexus class - both username and password must be set")
+    fail("Cannot initialize the Nexus class - both username and password must be set")
 } elsif ($username == "")  and ($password == "") {
-	$authentication = false
+    $authentication = false
 } else {
-	$authentication = true
-	$user = $username
-	$pwd = $password
+    $authentication = true
+    $user = $username
+    $pwd = $password
 }
 
 # Install script
 file { "/opt/nexus-script/download-artifact-from-nexus.sh":
-		ensure   => file,
-	    owner    => "root",
-	    mode     => "0755",
-		source   => "puppet:///modules/nexus_deploy/download-artifact-from-nexus.sh",
+        ensure   => file,
+        owner    => "root",
+        mode     => "0755",
+        source   => "puppet:///modules/nexus_deploy/download-artifact-from-nexus.sh",
 }
 
 file { "/opt/nexus-script":
-	ensure => directory
+    ensure => directory
 }
 
 }
