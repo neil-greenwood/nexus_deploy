@@ -18,16 +18,11 @@
 # }
 #
 class nexus_deploy (
-    $url      = '',
+    $url,
+
     $username = '',
     $password = ''
 ) {
-
-# Check arguments
-# url mandatory
-    if $url == '' {
-        fail('Cannot initialize the Nexus class - the url parameter is mandatory')
-    }
 
     if ($username != '') and ($password == '') {
         fail('Cannot initialize the Nexus class - both username and password must be set')
