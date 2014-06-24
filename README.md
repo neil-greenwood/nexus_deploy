@@ -53,6 +53,32 @@ Usage
         mode       => 0755,
     }
 
+
+Or use via Hiera:
+
+    include nexus_deploy
+    include nexus_deploy::hiera
+
+and with yaml file:
+
+    ---
+    nexus_deploy::url:      'http://edge.spree.de/nexus'
+    nexus_deploy::username: 'nexus'
+    nexus_deploy::password: '********',
+
+    nexus_deploy:
+      'apache-tomcat':
+        ensure:     'present'
+        gav:        'org.ow2.chameleon:distribution-web:0.3.0-SNAPSHOT'
+        classifier: 'distribution'
+        packaging:  'zip'
+        repository: 'public-snapshots'
+        output:     '/tmp/distribution-web-0.3.0-SNAPSHOT.zip',
+        timeout:    '600'
+        owner:      'myuser'
+        group:      'mygroup'
+        mode:       '0755'
+
 License
 -------
 
