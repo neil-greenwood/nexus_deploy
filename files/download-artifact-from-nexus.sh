@@ -20,9 +20,9 @@ OPTIONS:
    -c    Artifact Classifier
    -e    Artifact Packaging
    -o    Output file
-   -r	 Repository
+   -r     Repository
    -u    Username
-   -p	 Password
+   -p     Password
    -n    Nexus Base URL
 
 EOF
@@ -49,13 +49,13 @@ do
              exit 1
              ;;
          a)
-	     	 OIFS=$IFS
+              OIFS=$IFS
              IFS=":"
-		     GAV_COORD=( $OPTARG )
-		     GROUP_ID=${GAV_COORD[0]}
+             GAV_COORD=( $OPTARG )
+             GROUP_ID=${GAV_COORD[0]}
              ARTIFACT_ID=${GAV_COORD[1]}
-             VERSION=${GAV_COORD[2]}	     
-	    	 IFS=$OIFS
+             VERSION=${GAV_COORD[2]}
+             IFS=$OIFS
              ;;
          c)
              CLASSIFIER=$OPTARG
@@ -66,21 +66,21 @@ do
          v)
              VERBOSE=1
              ;;
-		 o)
-			OUTPUT=$OPTARG
-			;;
-		 r)
-		    REPO=$OPTARG
-		    ;;
-		 u)
-		    USERNAME=$OPTARG
-		    ;;
-		 p)
-		    PASSWORD=$OPTARG
-		    ;;
-		 n)
-			NEXUS_BASE=$OPTARG
-			;;
+         o)
+            OUTPUT=$OPTARG
+            ;;
+         r)
+            REPO=$OPTARG
+            ;;
+         u)
+            USERNAME=$OPTARG
+            ;;
+         p)
+            PASSWORD=$OPTARG
+            ;;
+         n)
+            NEXUS_BASE=$OPTARG
+            ;;
          ?)
              echo "Illegal argument $OPTION=$OPTARG" >&2
              usage
@@ -101,12 +101,12 @@ fi
 # If we don't have set a repository and the version requested is a SNAPSHOT use snapshots, otherwise use releases
 if [[ "$REPOSITORY" == "" ]]
 then
-	if [[ "$VERSION" =~ ".*SNAPSHOT" ]]
-	then
-		: ${REPO:="snapshots"}
-	else
-		: ${REPO:="releases"}
-	fi
+    if [[ "$VERSION" =~ ".*SNAPSHOT" ]]
+    then
+        : ${REPO:="snapshots"}
+    else
+        : ${REPO:="releases"}
+    fi
 fi
 # Construct the base URL
 REDIRECT_URL=${NEXUS_BASE}${REST_PATH}${ART_REDIR}
@@ -115,7 +115,7 @@ REDIRECT_URL=${NEXUS_BASE}${REST_PATH}${ART_REDIR}
 PARAM_KEYS=( g a v r p c )
 PARAM_VALUES=( $GROUP_ID $ARTIFACT_ID $VERSION $REPO $PACKAGING $CLASSIFIER )
 PARAMS=""
-for index in ${!PARAM_KEYS[*]} 
+for index in ${!PARAM_KEYS[*]}
 do
   if [[ ${PARAM_VALUES[$index]} != "" ]]
   then
@@ -129,12 +129,12 @@ REDIRECT_URL="${REDIRECT_URL}?${PARAMS}"
 AUTHENTICATION=
 if [[ "$USERNAME" != "" ]]  && [[ "$PASSWORD" != "" ]]
 then
-	AUTHENTICATION="-u $USERNAME:$PASSWORD"
+    AUTHENTICATION="-u $USERNAME:$PASSWORD"
 fi
 
 # Output
 OUT=
-if [[ "$OUTPUT" != "" ]] 
+if [[ "$OUTPUT" != "" ]]
 then
   TMP_OUT=$(mktemp)
   OUT="-o $TMP_OUT"
