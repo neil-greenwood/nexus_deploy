@@ -27,7 +27,6 @@ class nexus_deploy(
 if $url == "" {
 	fail("Cannot initialize the Nexus class - the url parameter is mandatory")
 }
-$NEXUS_URL = $url
 
 if ($username != "")  and ($password == "") {
 	fail("Cannot initialize the Nexus class - both username and password must be set")
@@ -52,6 +51,6 @@ file { "/opt/nexus-script/download-artifact-from-nexus.sh":
 
 file { "/opt/nexus-script":
 	ensure => directory
-}	
+}
 
 }
