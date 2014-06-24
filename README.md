@@ -47,7 +47,7 @@ Usage
         packaging  => 'zip',
         repository => 'public-snapshots',
         output     => '/tmp/distribution-web-0.3.0-SNAPSHOT.zip',
-        timeout    => 0600,
+        timeout    => 600,
         owner      => 'myuser',
         group      => 'mygroup',
         mode       => 0755,
