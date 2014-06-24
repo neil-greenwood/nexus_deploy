@@ -41,7 +41,7 @@ define nexus_deploy::artifact(
 
     include nexus_deploy
 
-    if ($nexus_deploy::authentication) {
+    if $nexus_deploy::authentication {
         $args = "-u ${nexus_deploy::user} -p '${nexus_deploy::pwd}'"
     } else {
         $args = ''
@@ -63,7 +63,7 @@ define nexus_deploy::artifact(
     } elsif $ensure == 'absent' {
         file {
           "Remove ${gav}-${classifier}":
-            ensure => absent,
+            ensure => $ensure,
             path   => $output,
         }
     } else {
@@ -78,10 +78,10 @@ define nexus_deploy::artifact(
         file {
           $output:
             ensure  => file,
-            require => Exec["Download ${gav}-${classifier}"],
             owner   => $owner,
             group   => $group,
             mode    => $mode,
+            require => Exec["Download ${gav}-${classifier}"],
         }
     }
 
