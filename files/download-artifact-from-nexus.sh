@@ -142,4 +142,13 @@ fi
 
 echo "Fetching Artifact from $REDIRECT_URL..." >&2
 curl -sS -L ${REDIRECT_URL} ${OUT} ${AUTHENTICATION} -v -k --location-trusted --fail
-mv $TMP_OUT $OUTPUT
+RETVAL=$?
+
+if [[ "$RETVAL" == "0" ]]
+then
+  mv $TMP_OUT $OUTPUT
+  echo "Success!"
+else
+  echo "Not successful: ${RETVAL}"
+  exit $RETVAL
+fi
