@@ -41,6 +41,15 @@ class nexus_deploy (
     }
 
     file {
+      '/opt/nexus-script/md5check.sh':
+        ensure => file,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+        source => 'puppet:///modules/nexus_deploy/md5check.sh',
+    }
+
+    file {
       '/opt/nexus-script':
         ensure => directory
     }

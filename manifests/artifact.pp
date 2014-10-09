@@ -13,6 +13,7 @@
 # [*owner*] : Optional user to own the file
 # [*group*] : Optional group to own the file
 # [*mode*] : Optional mode for file
+# [*checksum*] : Compare hash of downloaded artifact again nexus generated one. Currently only md5 is available
 #
 # Actions:
 # If ensure is set to 'present' the resource checks the existence of the file and download the artifact if needed.
@@ -32,12 +33,13 @@ define nexus_deploy::artifact (
     $output,
 
     $packaging  = 'jar',
-    $classifier = '',
+    $classifier = undef,
     $ensure     = 'update',
     $timeout    = undef,
     $owner      = undef,
     $group      = undef,
     $mode       = '0644',
+    $checksum   = 'md5',
 ) {
 
     include nexus_deploy
@@ -48,42 +50,63 @@ define nexus_deploy::artifact (
         $args = ''
     }
 
-    if $classifier {
+    if $classifier or $classifier == '' {
         $includeClass = "-c ${classifier}"
     }
 
-    $cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} ${includeClass} -n ${nexus_deploy::url} -r ${repository} -o ${output} ${args} -v"
+    each([$output, $checksum])  |$index, $value| {
 
-    if $ensure == 'present' {
-        exec {
-          "Download ${gav}-${classifier}":
-            command => $cmd,
-            creates => $output,
-            timeout => $timeout,
+        if $index == 0 {
+            $output_real    = $output
+            $packaging_real = $packaging
+        } else {
+            $output_real    = "${output}.${checksum}"
+            $packaging_real = "${packaging}.${checksum}"
         }
-    } elsif $ensure == 'absent' {
-        file {
-          "Remove ${gav}-${classifier}":
-            ensure => $ensure,
-            path   => $output,
+
+        $cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging_real} ${includeClass} -n ${nexus_deploy::url} -r ${repository} -o ${output_real} ${args} -v"
+
+        if $ensure == 'present' {
+            exec {
+              "Download ${gav}-${classifier}-${output_real}":
+                command => $cmd,
+                creates => $output_real,
+                timeout => $timeout,
+                notify  => Exec["Checking checksum for ${output}"],
+            }
+        } elsif $ensure == 'absent' {
+            file {
+              "Remove ${gav}-${classifier}-${output_real}":
+                ensure => $ensure,
+                path   => $output_real,
+            }
+        } else {
+            exec {
+              "Download ${gav}-${classifier}-${output_real}":
+                command => $cmd,
+                timeout => $timeout,
+                notify  => Exec["Checking checksum for ${output}"],
+            }
         }
-    } else {
-        exec {
-          "Download ${gav}-${classifier}":
-            command => $cmd,
-            timeout => $timeout,
+
+        if $ensure != absent {
+            file {
+              $output_real:
+                ensure  => file,
+                owner   => $owner,
+                group   => $group,
+                mode    => $mode,
+                require => Exec["Download ${gav}-${classifier}-${output_real}"],
+            }
         }
     }
 
-    if $ensure != absent {
-        file {
-          $output:
-            ensure  => file,
-            owner   => $owner,
-            group   => $group,
-            mode    => $mode,
-            require => Exec["Download ${gav}-${classifier}"],
-        }
+## Do checksum
+    exec {
+      "Checking checksum for ${output}":
+        cwd         => dirname($output),
+        command     => "/opt/nexus-script/md5check.sh ${output}.${checksum}",
+        refreshonly => true,
     }
 
 }

@@ -6,6 +6,7 @@ This Puppet Module downloads Maven artifacts from a Nexus server. It supports:
 * artifact identification using GAV classifier and packaging
 * repository selection
 * authentication
+* comparing artifact hash againts nexus generated one  
 
 It relies on the Nexus REST service and on curl.
 
