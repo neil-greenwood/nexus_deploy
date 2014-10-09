@@ -50,7 +50,7 @@ define nexus_deploy::artifact (
         $args = ''
     }
 
-    if $classifier or $classifier == '' {
+    if $classifier {
         $includeClass = "-c ${classifier}"
     }
 
