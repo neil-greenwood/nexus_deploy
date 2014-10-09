@@ -1,4 +1,6 @@
 #!/bin/bash
+# Original answer via Superuser by okobaka
+# http://superuser.com/a/455326
 
 key=$1
 
