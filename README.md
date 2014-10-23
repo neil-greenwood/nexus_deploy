@@ -17,10 +17,7 @@ Getting the module
 
 Requirements
 ------------
-* On puppetmaster set: 
 
-    parser = future
-    
 * puppetlabs/stdlib - https://forge.puppetlabs.com/puppetlabs/stdlib
 
 Usage
