@@ -17,6 +17,7 @@
 # [*mode*] : Optional mode for file
 # [*link_folder*] : Optional folder, where symlink of the current artifact will be created. Must be set when $link_create is set to true
 # [*link_ensure*] : Ensure symlink existence wihtout rebuiling the env (or removing by hand)
+# [*$link_filename*] : Set the filename of the symlink (without the absolute path part)
 # [*checksum*] : Compare hash of downloaded artifact again nexus generated one. Currently only md5 is available
 #
 # Actions:
@@ -49,8 +50,9 @@ define nexus_deploy::download (
     $group       = undef,
     $mode        = '0644',
 
-    $link_ensure = false,
-    $link_folder = undef,
+    $link_ensure   = false,
+    $link_folder   = undef,
+    $link_filename = undef,
 
     $checksum    = 'md5',
 ) {
@@ -104,18 +106,22 @@ define nexus_deploy::download (
 
         validate_absolute_path($link_folder)
 
-        $symlink = "${link_folder}/${artifactid}.${packaging}"
+        if $link_filename {
+            $link = "${link_folder}/${link_filename}"
+        } else {
+            $link = "${link_folder}/${artifactid}.${packaging}"
+        }
 
         if $link_ensure {
             file {
-              $symlink:
+              $link:
                 ensure => link,
                 target => $output,
 
             }
         } else {
             file {
-              $symlink:
+              $link:
                 ensure => absent,
             }
         }
