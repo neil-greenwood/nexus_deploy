@@ -92,10 +92,10 @@ define nexus_deploy::download (
 
         exec {
           "Checking checksum: ${output}":
-            cwd     => dirname($output),
-            command => "/opt/nexus-script/md5check.sh ${output}.${checksum}",
+            cwd         => dirname($output),
+            command     => "/opt/nexus-script/md5check.sh ${output}.${checksum}",
             refreshonly => true,
-            require => [
+            require     => [
                 Nexus_deploy::Artifact["Downloading artifact: ${artifactid}.${packaging} to ${output}"],
                 Nexus_deploy::Artifact["Downloading checksum: ${artifactid}.${packaging}.${checksum} to ${output}.${checksum}"],
             ],
