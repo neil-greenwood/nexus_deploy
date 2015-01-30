@@ -44,12 +44,6 @@ define nexus_deploy::artifact (
 
     include nexus_deploy
 
-    File {
-        owner => $deploy_user,
-        group => $deploy_group,
-        mode  => $deploy_mode,
-    }
-
     # Ensure that the download folder exists before we download stuff
     if !defined(File[dirname($output)]) {
         file {
