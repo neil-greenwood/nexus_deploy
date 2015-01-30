@@ -64,7 +64,7 @@ define nexus_deploy::download (
     }
 
     nexus_deploy::artifact {
-      "Downloading artifact: ${artifactid}.${packaging}":
+      "Downloading artifact: ${artifactid}.${packaging} to ${output}":
         ensure     => $ensure,
         gav        => "${groupid}:${artifactid}:${version}",
         repository => $repository,
@@ -78,7 +78,7 @@ define nexus_deploy::download (
 
     if $checksum {
         nexus_deploy::artifact {
-          "Downloading checksum: ${artifactid}.${packaging}.${checksum}":
+          "Downloading checksum: ${artifactid}.${packaging}.${checksum} to ${output}.${checksum}":
             ensure     => $ensure,
             gav        => "${groupid}:${artifactid}:${version}",
             repository => $repository,
@@ -96,8 +96,8 @@ define nexus_deploy::download (
             command => "/opt/nexus-script/md5check.sh ${output}.${checksum}",
             refreshonly => true,
             require => [
-                Nexus_deploy::Artifact["Downloading artifact: ${artifactid}.${packaging}"],
-                Nexus_deploy::Artifact["Downloading checksum: ${artifactid}.${packaging}.${checksum}"],
+                Nexus_deploy::Artifact["Downloading artifact: ${artifactid}.${packaging} to ${output}"],
+                Nexus_deploy::Artifact["Downloading checksum: ${artifactid}.${packaging}.${checksum} to ${output}.${checksum}"],
             ],
         }
     }
