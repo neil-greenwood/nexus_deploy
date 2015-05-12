@@ -23,7 +23,7 @@
 # Sample Usage:
 #  class nexus_deploy::artifact {
 #   gav        => 'group:artifact:version',
-#   repository => 'http://repo.url/',
+#   repository => 'public',
 #   output     => 'output file name',
 # }
 #
@@ -41,13 +41,14 @@ define nexus_deploy::artifact (
     $mode       = '0644',    #$mode = undef,
 ) {
 
-    validate_absolute_path(dirname($output))
+    $outputDir = dirname($output)
+    validate_absolute_path($outputDir)
 
     include nexus_deploy
 
     # Ensure that the download folder exists before we download stuff
-    if !defined(File[dirname($output)]) {
-        file { "dirname($output)":
+    if !defined(File[$outputDir]) {
+        file { $outputDir:
             ensure => directory
         }
     }
@@ -78,7 +79,7 @@ define nexus_deploy::artifact (
             command => $cmd,
             creates => $output,
             timeout => $timeout,
-            require => File[dirname($output)]
+            require => File[$outputDir]
         }
     } elsif $ensure == 'absent' {
         file {
@@ -91,7 +92,7 @@ define nexus_deploy::artifact (
           "Download ${gav}-${classifier}-${output}":
             command => $cmd,
             timeout => $timeout,
-            require => File[dirname($output)]
+            require => File[$outputDir]
         }
     }
 
