@@ -47,8 +47,7 @@ define nexus_deploy::artifact (
 
     # Ensure that the download folder exists before we download stuff
     if !defined(File[dirname($output)]) {
-        file {
-          dirname($output):
+        file { "dirname($output)":
             ensure => directory
         }
     }
@@ -106,6 +105,5 @@ define nexus_deploy::artifact (
             require => Exec["Download ${gav}-${classifier}-${output}"],
         }
     }
-  }
 
 }

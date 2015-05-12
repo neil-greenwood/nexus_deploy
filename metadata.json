@@ -1,6 +1,6 @@
 {
   "author": "Clement Escoffier, akquinet tech@spree gmbh",
-  "license": "Apache Software License 2.0",
+  "license": "Apache-2.0",
   "name": "cescoffier-nexus",
   "summary": "Download Maven Artifacts from Nexus",
   "version": "0.0.1",
