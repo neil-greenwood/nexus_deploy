@@ -8,7 +8,8 @@
 # [*classifier*] : The classifier (no classifier by default)
 # [*repository*] : The repository such as 'public', 'central'...(mandatory)
 # [*output*] : The output file (mandatory)
-# [*ensure*] : If 'present' checks the existence of the output file (and downloads it if needed), if 'absent' deletes the output file, if not set redownload the artifact
+# [*ensure*] : If 'present' checks the existence of the output file (and downloads it if needed), if 'absent' deletes the output
+# file, if not set redownload the artifact
 # [*timeout*] : Optional timeout for download exec. 0 disables - see exec for default.
 # [*owner*] : Optional user to own the file
 # [*group*] : Optional group to own the file
@@ -20,10 +21,10 @@
 # If ensure is not set or set to 'update', the artifact is re-downloaded.
 #
 # Sample Usage:
-#  class nexus_deploy {
-#   url => http://edge.spree.de/nexus,
-#   username => user,
-#   password => password
+#  class nexus_deploy::artifact {
+#   gav        => 'group:artifact:version',
+#   repository => 'http://repo.url/',
+#   output     => 'output file name',
 # }
 #
 define nexus_deploy::artifact (
@@ -32,12 +33,12 @@ define nexus_deploy::artifact (
     $output,
 
     $packaging  = 'jar',
-    $classifier = undef,
+    $classifier = undef,     #$classifier = '',
     $ensure     = 'update',
     $timeout    = undef,
     $owner      = undef,
     $group      = undef,
-    $mode       = '0644',
+    $mode       = '0644',    #$mode = undef,
 ) {
 
     validate_absolute_path(dirname($output))
@@ -64,6 +65,14 @@ define nexus_deploy::artifact (
 
     $cmd = "/opt/nexus-script/download-artifact-from-nexus.sh -a ${gav} -e ${packaging} ${includeClass} -n ${nexus_deploy::url} -r ${repository} -o ${output} ${args} -v"
 
+    if (($ensure != absent) and ($gav =~ /-SNAPSHOT/)) {
+        exec { "Checking ${gav}-${classifier}":
+            command => "${cmd} -z",
+            timeout => $timeout,
+            before  => Exec["Download ${name}"],
+        }
+    }
+
     if $ensure == 'present' {
         exec {
           "Download ${gav}-${classifier}-${output}":
@@ -87,7 +96,7 @@ define nexus_deploy::artifact (
         }
     }
 
-    if $ensure != absent {
+    if $ensure != 'absent' {
         file {
           $output:
             ensure  => file,
@@ -97,5 +106,6 @@ define nexus_deploy::artifact (
             require => Exec["Download ${gav}-${classifier}-${output}"],
         }
     }
+  }
 
 }

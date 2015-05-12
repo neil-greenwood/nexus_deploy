@@ -12,10 +12,10 @@
 #
 # Sample Usage:
 #  class nexus_deploy {
-#   url => http://edge.spree.de/nexus,
+#   url      => http://edge.spree.de/nexus,
 #   username => user,
 #   password => password
-# }
+#}
 #
 class nexus_deploy (
     $url,
@@ -23,6 +23,10 @@ class nexus_deploy (
     $username = undef,
     $password = undef,
 ) {
+
+    if((!$username and $password) or ($username and !$password)) {
+        fail('Cannot initialize the Nexus class - both username and password must be set')
+    }
 
     if $username and $password {
         $authentication = true
