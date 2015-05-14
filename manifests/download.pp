@@ -15,8 +15,8 @@
 # [*owner*] : Optional owner to own the file
 # [*group*] : Optional group to own the file
 # [*mode*] : Optional mode for file
-# [*link_folder*] : Optional folder, where symlink of the current artifact will be created. Must be set when $link_create is set to true
-# [*link_ensure*] : Ensure symlink existence wihtout rebuiling the env (or removing by hand)
+# [*link_folder*] : Optional folder, where symlink of the current artifact will be created. Must be set when $link_ensure is set to true
+# [*link_ensure*] : Ensure symlink existence without rebuilding the env (or removing by hand)
 # [*$link_filename*] : Set the filename of the symlink (without the absolute path part)
 # [*checksum*] : Compare hash of downloaded artifact again nexus generated one. Currently only md5 is available
 #
@@ -40,21 +40,21 @@ define nexus_deploy::download (
 
     $output,
 
-    $packaging   = 'jar',
-    $classifier  = undef,
-    $ensure      = 'update',
+    $packaging     = 'jar',
+    $classifier    = undef,
+    $ensure        = 'update',
 
-    $timeout     = undef,
+    $timeout       = undef,
 
-    $owner       = undef,
-    $group       = undef,
-    $mode        = '0644',
+    $owner         = undef,
+    $group         = undef,
+    $mode          = '0644',
 
     $link_ensure   = false,
     $link_folder   = undef,
     $link_filename = undef,
 
-    $checksum    = 'md5',
+    $checksum      = 'md5',
 ) {
 
     validate_bool($link_ensure)

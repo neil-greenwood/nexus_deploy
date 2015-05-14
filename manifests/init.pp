@@ -23,6 +23,21 @@ class nexus_deploy (
     $username = undef,
     $password = undef,
 ) {
+    case $::osfamily {
+        'RedHat': {
+        }
+        'Debian','Windows','Solaris': {
+            fail("${::osfamily} is not supported.")
+        }
+        default: {
+            fail("Unknown OS ${::osfamily}.")
+        }
+    }
+
+    validate_string($url)
+    if empty($url) {
+        fail('Mandatory parameter "url" missing.')
+    }
 
     if((!$username and $password) or ($username and !$password)) {
         fail('Cannot initialize the Nexus class - both username and password must be set')
