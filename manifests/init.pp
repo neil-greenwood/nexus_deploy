@@ -4,6 +4,7 @@
 #
 # Parameters:
 # [*url*] : The Nexus base url (mandatory)
+# [*repo*] : The Nexus base repository (mandatory)
 # [*username*] : The username used to connect to nexus
 # [*password*] : The password used to connect to nexus
 #
@@ -19,6 +20,7 @@
 #
 class nexus_deploy (
     $url,
+    $repo,
 
     $username = undef,
     $password = undef,
@@ -38,6 +40,10 @@ class nexus_deploy (
     if empty($url) {
         fail('Mandatory parameter "url" missing.')
     }
+    validate_string($repo)
+    if empty($repo) {
+        fail('Mandatory parameter "repo" missing.')
+    }
 
     if((!$username and $password) or ($username and !$password)) {
         fail('Cannot initialize the Nexus class - both username and password must be set')
@@ -52,11 +58,11 @@ class nexus_deploy (
 # Install script
     file {
       '/opt/nexus-script/download-artifact-from-nexus.sh':
-        ensure => file,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0755',
-        source => 'puppet:///modules/nexus_deploy/download-artifact-from-nexus.sh',
+        ensure  => file,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        content => template('nexus_deploy/download-artifact-from-nexus.sh.erb'),
     }
 
     file {

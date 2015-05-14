@@ -13,7 +13,10 @@ describe 'nexus_deploy::artifact', :type => :define do
             :osfamily               => 'RedHat',
         }}
         let(:title) { 'junit' }
-        let(:pre_condition) { ['class {"nexus_deploy":', ' url => "foo",', '}'] }
+        let(:pre_condition) { ['class {"nexus_deploy":',
+                               ' url  => "http://nexus-repo/nexus",',
+                               ' repo => "releases",',
+                               '}'] }
         let(:params) {{
             :gav        => 'junit:junit:4.11',
             :repository => 'public',
@@ -22,7 +25,7 @@ describe 'nexus_deploy::artifact', :type => :define do
 
         it { should contain_file('/foo/bar').with_ensure('directory') }
         it { should contain_exec('Download junit:junit:4.11--/foo/bar/junit-4.11.jar').with(
-            'command' => '/opt/nexus-script/download-artifact-from-nexus.sh -a junit:junit:4.11 -e jar  -n foo -r public -o /foo/bar/junit-4.11.jar  -v',
+            'command' => '/opt/nexus-script/download-artifact-from-nexus.sh -a junit:junit:4.11 -e jar  -n http://nexus-repo/nexus -r public -o /foo/bar/junit-4.11.jar  -v',
         ).that_requires('File[/foo/bar]') }
         it { should contain_file('/foo/bar/junit-4.11.jar').with(
             'ensure'  => 'file',
